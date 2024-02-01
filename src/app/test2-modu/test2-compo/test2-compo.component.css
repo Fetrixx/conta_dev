@@ -1,0 +1,234 @@
+.mdc-data-table__cell, .mdc-data-table__header-cell {
+  
+  padding: 0 0px 0 0px;
+  
+
+}
+
+  
+.mat-mdc-form-field {
+    font-size: 14px;
+    width: 100%
+  }
+   
+
+mat-card{
+    
+    margin-top: 1vw;
+    margin-bottom: 1vw;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.mat-column-select {
+    overflow: initial;
+  }
+
+.inputText2{
+    
+    font-size: 14px;
+    width: 30%;
+    margin: 0.5vw;
+  }
+
+
+  .textLeft{
+    text-wrap: pretty;
+    text-align: center;
+    
+    margin: 1vw;
+    width: 100%;
+    font-size: 16px ;
+  
+    line-height: 1.25;
+
+  }
+  .check{
+      word-wrap: break-word !important;
+      white-space: unset !important;
+      flex: 0 0 28% !important;
+      width: 28% !important;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+    
+      word-break: break-word;
+    
+      -ms-hyphens: auto;
+      -moz-hyphens: auto;
+      -webkit-hyphens: auto;
+      hyphens: auto;
+    
+  }
+
+  .inputNumber{
+    
+    margin-bottom: -3vh;
+    padding: 6%;
+    height: 4.8rem;
+    width: 100%;
+    line-height: 1.25;
+  }
+
+
+
+  .checks{
+    table-layout: fixed;
+    text-align: left;
+  }
+
+  
+
+
+
+
+  /*
+  
+  mat-grid-tile {
+    
+  background: whitesmoke;
+  border-radius: 5px;
+}
+
+// erase increment and decrement from input number field 
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+}
+
+
+.card{
+  background: lightblue
+  
+}
+
+
+
+  .textTitle{
+    background: #e4f4f4;
+    width: 100%;
+    font-weight: bold;
+    text-wrap: pretty;
+    font-size: 1vw;
+  }
+  
+.cardsDiv{
+  
+  margin-left: 10%;
+  margin-right: 10%;;
+  margin-top: 1rem;
+
+}
+.textCentered{
+  text-wrap:balance;
+  text-align: center;
+  margin: 4%;
+  font-size: 1vw;
+}
+
+.textCenteredBold{
+  text-wrap:pretty;
+  text-align: center;
+  margin: 4%;
+  font-weight: bold;
+  width: 100%;
+  font-size: 1vw;
+}
+
+.textHeadBold{
+  text-wrap:pretty;
+  text-align: center;
+  margin: 4%;
+  font-weight: bold;
+  width: 100%;
+  font-size: 1.5vw;
+}
+
+.textHead{
+  text-wrap:pretty;
+  text-align: left;
+  margin-left: 4%;
+  margin-right: 2%;
+  font-size: 1vw;
+  
+}
+
+.button{
+  margin-left: 3%;
+  margin-right: 3%;
+  text-wrap:pretty;
+  text-align: left;
+  margin: 1rem;
+  font-size: 1vw ;
+}
+
+.textFooter{
+  text-align: left;
+  margin-left: 1vw;
+  margin-right: 2%;
+  text-wrap:nowrap;
+  font-size: 1vw;
+  
+
+  
+}
+
+.textLeft{
+  text-wrap: pretty;
+  text-align: left;
+  
+  margin: 1vw;
+  width: 100%;
+  font-size: 1vw ;
+
+  line-height: 1.25;
+  
+}
+
+
+.textLeftBold{
+  text-wrap:balance;
+  text-align: left;
+  margin: 1rem;
+  width: 100%;
+  font-weight: bold;
+  font-size: 1vw;
+}
+  .inputNumber{
+    
+    margin-bottom: -3vh;
+    padding: 6%;
+    height: 4.8rem;
+    width: 100%;
+    line-height: 1.25;
+  }
+
+  .inputText{
+    text-wrap: pretty;
+    margin-bottom: -3vh;
+    padding: 1%;
+    height: 4.8rem;
+    width: 100%;
+    font-size: 1vw;
+  }
+
+  .textFirma{
+    height: 90%;
+    width: 100%;
+    position: relative;
+    display:flex;
+    justify-content: center;
+    font-size: 1vw;
+    text-decoration: underline;
+  }
+ 
+
+  .inputDate{
+    text-wrap: pretty;
+    width: 80%;
+    margin-bottom: -3vh;
+    padding: 1%;
+    height: 4.8rem;
+    font-size: 1vw;
+  }
+  
+  */
