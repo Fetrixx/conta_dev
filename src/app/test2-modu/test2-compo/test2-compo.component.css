@@ -6,6 +6,10 @@
   margin: 0 20px;
 }
 
+.my-table{
+  user-select: none;
+}
+
 .table-container {
   flex: 1;
   min-height: 0;
