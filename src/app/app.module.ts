@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Test2ModuModule } from './test2-modu/test2-modu.module';
 
+
 @NgModule({
   declarations: [
     AppComponent,

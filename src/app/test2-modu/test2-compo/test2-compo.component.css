@@ -5,7 +5,17 @@
 
 }
 
+.but{
+  margin-bottom: 1%;
+  margin-right: 1%;
   
+}
+
+.example-selected-row {
+  background-color: #32adff3d; /* Adjust as desired */
+}
+
+
 .mat-mdc-form-field {
     font-size: 14px;
     width: 100%
