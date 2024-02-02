@@ -20,7 +20,7 @@ import { FormGroup, FormControl, AbstractControl } from '@angular/forms';
 import { DataSource, SelectionModel } from '@angular/cdk/collections';
 import { Observable, merge } from 'rxjs';
 
-import * as XLSX from "xlsx";
+//import * as XLSX from "xlsx";
 
 
 
@@ -53,39 +53,173 @@ export interface TableData {
 
 export class Test2CompoComponent implements AfterViewInit { // TableOverviewExample
 
-  selection2 = new SelectionModel<any>(true, []); 
- 
-  selectRowsBetween() {
-    const selected = this.selection2.selected;
-    if (selected.length !== 2) {
+  selection = new SelectionModel<any>(true, []);
+
+
+  
+
+  
+
+  // Nueva propiedad para manejar la última fila seleccionada con Shift+Click
+  private lastSelectedRowIndex: number | null = null;
+
+  // Nueva propiedad para almacenar las filas seleccionadas antes de la clasificación
+  private preSortSelection: Set<TableData> = new Set<TableData>();
+
+  
+  rowClick(row: TableData, event: MouseEvent) {
+    const isCtrlPressed = event.ctrlKey;
+    const isShiftPressed = event.shiftKey;
+
+    
+    // Obtener los datos ordenados actualmente
+    //const sortedData = this.dataSource.sort?.sortData(this.dataSource.data, this.dataSource.sort);
+    
+    
+    /*
+    if (this.dataSource.sort?.active !== null && this.dataSource.sort?.direction !== '') {
+      // Si hay una clasificación aplicada, restaurar la selección a su estado antes de la clasificación
+      this.selection.clear();
+      this.preSortSelection.forEach(selectedRow => this.selection.select(selectedRow));
+    }
+    */
+
+    
+    if (isCtrlPressed) {
+      // Si Ctrl está presionado, simplemente alternar la selección de la fila
+      this.selection.toggle(row);
+    } else if (isShiftPressed && this.lastSelectedRowIndex !== null) {
+      // Si Shift está presionado, seleccionar en rango
+      const start = Math.min(this.lastSelectedRowIndex, this.dataSource.data.indexOf(row));
+      const end = Math.max(this.lastSelectedRowIndex, this.dataSource.data.indexOf(row));
+
+      for (let i = start; i <= end; i++) {
+        this.selection.select(this.dataSource.data[i]);
+      }
+    } else {
+      // Si no hay teclas especiales, seleccionar solo la fila clicada
+      this.selection.clear();
+      this.selection.select(row);
+    }
+
+    // Actualizar el índice de la última fila seleccionada y almacenar la selección antes de la clasificación
+    this.lastSelectedRowIndex = this.dataSource.data.indexOf(row);
+    this.preSortSelection = new Set(this.selection.selected);
+
+    // Restaurar el valor de lastSelectedRowIndex y preSortSelection al deseleccionar todas las filas
+  
+  }
+
+  
+
+  /*
+  // Manejar el evento de clic en una fila
+  rowClick(row: TableData, event: MouseEvent) {
+    const isCtrlPressed = event.ctrlKey;
+    const isShiftPressed = event.shiftKey;
+
+    if (isCtrlPressed) {
+      // Si Ctrl está presionado, simplemente alternar la selección de la fila
+      this.selection.toggle(row);
+    } else if (isShiftPressed && this.lastSelectedRowIndex !== null) {
+      // Si Shift está presionado, seleccionar en rango
+      const start = Math.min(this.lastSelectedRowIndex, this.dataSource.data.indexOf(row));
+      const end = Math.max(this.lastSelectedRowIndex, this.dataSource.data.indexOf(row));
+
+      for (let i = start; i <= end; i++) {
+        this.selection.select(this.dataSource.data[i]);
+      }
+    } else {
+      // Si no hay teclas especiales, seleccionar solo la fila clicada
+      this.selection.clear();
+      this.selection.select(row);
+    }
+
+    // Actualizar el índice de la última fila seleccionada
+    this.lastSelectedRowIndex = this.dataSource.data.indexOf(row);
+  }
+
+  */
+
+  
+
+  selectRowsBetween() {// si funciona
+    const selectedRows = this.selection.selected;
+
+    if (selectedRows.length !== 2) {
       // Handle cases where less than or more than two rows are selected
       return;
     }
 
-    this.selection2.clear();
-    
-    const startIndex = this.dataSource.data.indexOf(selected[0]);
-    const endIndex = this.dataSource.data.indexOf(selected[1]);
+    this.selection.clear();
+
+    const startIndex = this.dataSource.data.indexOf(selectedRows[0]);
+    //console.log(startIndex);
+
+    const endIndex = this.dataSource.data.indexOf(selectedRows[1]);
+    //console.log(endIndex);
 
     if (startIndex === -1 || endIndex === -1) {
       // Handle cases where selected rows are not found in the data source
       return;
     }
 
-    // Clear any existing selection between the anchor points
-    this.selection.clear();
-
-    // Select rows between the anchor points, preserving existing selection outside
     const lowerIndex = Math.min(startIndex, endIndex);
     const upperIndex = Math.max(startIndex, endIndex);
+
     for (let i = lowerIndex; i <= upperIndex; i++) {
       this.selection.select(this.dataSource.data[i]);
     }
+
+    //this.logSelectedRows() // test if selection works
   }
+
+  logSelectedRows() {
+    console.log('Selected Rows:', this.selection.selected);
+  }
+
+
+  /*
+   selectRowsBetween() { // NO FUNCIOONA
+     const selected = this.selection.selected;
+     if (selected.length !== 2) {
+       // Handle cases where less than or more than two rows are selected
+       return;
+     }
+ 
+     this.selection.clear();
+     
+     const startIndex = this.dataSource.data.indexOf(selected[0]);
+     const endIndex = this.dataSource.data.indexOf(selected[1]);
+ 
+     if (startIndex === -1 || endIndex === -1) {
+       // Handle cases where selected rows are not found in the data source
+       return;
+     }
+ 
+     // Clear any existing selection between the anchor points
+     this.selection.clear();
+ 
+     // Select rows between the anchor points, preserving existing selection outside
+     const lowerIndex = Math.min(startIndex, endIndex);
+     const upperIndex = Math.max(startIndex, endIndex);
+ 
+     for (let i = lowerIndex; i <= upperIndex; i++) {
+       this.selection.select(this.dataSource.data[i]);
+     }
+   }
+   */
+
 
   deselectAllRows() {
     this.selection.clear();
+    this.lastSelectedRowIndex = null;
+    this.preSortSelection.clear();
   }
+
+
+  // Restaurar el valor de lastSelectedRowIndex y preSortSelection al deseleccionar todas las filas
+  
 
   selectAllUnselectedRows() {
     // Obtener todas las filas de la fuente de datos
@@ -161,7 +295,7 @@ export class Test2CompoComponent implements AfterViewInit { // TableOverviewExam
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
-    console.log("selected...");
+    //console.log("selected...");
 
 
     return numSelected == numRows;
@@ -188,7 +322,7 @@ export class Test2CompoComponent implements AfterViewInit { // TableOverviewExam
   paginator!: MatPaginator;
   @ViewChild(MatSort)
   sort!: MatSort;
-  selection: SelectionModel<TableData>;
+  selection2: SelectionModel<TableData>;
 
   constructor() {
 
@@ -197,7 +331,7 @@ export class Test2CompoComponent implements AfterViewInit { // TableOverviewExam
     const initialSelection: TableData[] | undefined = []; // 0
     const allowMultiSelect = true;
 
-    this.selection = new SelectionModel<TableData>(allowMultiSelect, initialSelection);
+    this.selection2 = new SelectionModel<TableData>(allowMultiSelect, initialSelection);
     // Assign the data to the data source for the table to render
     this.dataSource = new MatTableDataSource(users);
   }
@@ -208,7 +342,11 @@ export class Test2CompoComponent implements AfterViewInit { // TableOverviewExam
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-
+    
+    this.sort.sortChange.subscribe(() => {
+      // Limpiar la selección al cambiar la clasificación
+      this.selection.clear();
+    });
 
     // see to undestand
     // https://stackblitz.com/edit/angular-material-table-hide-columns-jgcnsg?file=src%2Fapp%2Fapp.component.html,src%2Fapp%2Fapp.component.ts

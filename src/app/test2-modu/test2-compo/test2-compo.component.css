@@ -1,97 +1,126 @@
-.mdc-data-table__cell, .mdc-data-table__header-cell {
-  
-  padding: 0 0px 0 0px;
-  
+.example-container {
+  display: flex;
+  flex-direction: column;
+  min-width: 400px;
+  height: 100%;
+  margin: 0 20px;
+}
+
+.table-container {
+  flex: 1;
+  min-height: 0;
+  overflow: auto
+}
+
+
+.but {
+  margin-bottom: 1%;
+  margin-right: 1%;
 
 }
 
-.but{
+.mat-mdc-card-content>:last-child:not(.mat-mdc-card-footer) {
+  /* boton cargar table */
   margin-bottom: 1%;
-  margin-right: 1%;
-  
 }
 
 .example-selected-row {
-  background-color: #32adff3d; /* Adjust as desired */
+  background-color: #32adff3d;
+  /* Adjust as desired */
 }
 
-
-.mat-mdc-form-field {
+/*
+.mat-mdc-form-field { 
+   form field for mat-input 
+  
     font-size: 14px;
     width: 100%
   }
-   
+*/
+.inputSmall {
+  font-size: 12px;
+  width: 40%;
+  min-width: 200px;
+  margin: 1%;
+}
 
-mat-card{
-    
-    margin-top: 1vw;
-    margin-bottom: 1vw;
-    margin-left: 10%;
-    margin-right: 10%;
+.inputLarge {
+  font-size: 12px;
+  width: 100%;
+
+}
+
+mat-form-field.mat-form-field {
+  font-size: 12px;
+  width: 300px;
+}
+
+
+mat-card {
+
+  margin-top: 1vw;
+  margin-bottom: 1vw;
+  margin-left: 10%;
+  margin-right: 10%;
 }
 
 .mat-column-select {
-    overflow: initial;
-  }
-
-.inputText2{
-    
-    font-size: 14px;
-    width: 30%;
-    margin: 0.5vw;
-  }
-
-
-  .textLeft{
-    text-wrap: pretty;
-    text-align: center;
-    
-    margin: 1vw;
-    width: 100%;
-    font-size: 16px ;
-  
-    line-height: 1.25;
-
-  }
-  .check{
-      word-wrap: break-word !important;
-      white-space: unset !important;
-      flex: 0 0 28% !important;
-      width: 28% !important;
-      overflow-wrap: break-word;
-      word-wrap: break-word;
-    
-      word-break: break-word;
-    
-      -ms-hyphens: auto;
-      -moz-hyphens: auto;
-      -webkit-hyphens: auto;
-      hyphens: auto;
-    
-  }
-
-  .inputNumber{
-    
-    margin-bottom: -3vh;
-    padding: 6%;
-    height: 4.8rem;
-    width: 100%;
-    line-height: 1.25;
-  }
+  overflow: initial;
+}
 
 
 
-  .checks{
-    table-layout: fixed;
-    text-align: left;
-  }
+.textLeft {
+  text-wrap: pretty;
+  text-align: center;
 
-  
+  margin: 1vw;
+  width: 100%;
+  font-size: 16px;
+
+  line-height: 1.25;
+
+}
+
+.check {
+  word-wrap: break-word !important;
+  white-space: unset !important;
+  flex: 0 0 28% !important;
+  width: 28% !important;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  word-break: break-word;
+
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+
+}
+
+.inputNumber {
+
+  margin-bottom: -3vh;
+  padding: 6%;
+  height: 4.8rem;
+  width: 100%;
+  line-height: 1.25;
+}
+
+
+
+.checks {
+  table-layout: fixed;
+  text-align: left;
+}
 
 
 
 
-  /*
+
+
+/*
   
   mat-grid-tile {
     
