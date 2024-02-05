@@ -17,7 +17,7 @@ import { Test2ModuModule } from './test2-modu/test2-modu.module';
     BrowserAnimationsModule,
     Test2ModuModule
   ],
-  providers: [{provide: LOCALE_ID, useValue: 'es-ES'}],
+  providers: [{ provide: LOCALE_ID, useValue: 'es-ES' }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

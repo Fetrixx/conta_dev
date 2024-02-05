@@ -1,15 +1,4 @@
-/*
-import { Component } from '@angular/core';
-
-@Component({
-  selector: 'app-test2',
-  templateUrl: './test2-compo.component.html',
-  styleUrl: './test2-compo.component.css'
-})
-export class Test2CompoComponent {
-
-}
-*/
+// try SheetJs 
 
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
@@ -19,10 +8,6 @@ import { FormGroup, FormControl, AbstractControl } from '@angular/forms';
 
 import { DataSource, SelectionModel } from '@angular/cdk/collections';
 import { Observable, merge } from 'rxjs';
-
-//import * as XLSX from "xlsx";
-
-
 
 
 
@@ -55,41 +40,52 @@ export class Test2CompoComponent implements AfterViewInit { // TableOverviewExam
 
   selection = new SelectionModel<any>(true, []);
 
-
-  
-
-  
-
   // Nueva propiedad para manejar la última fila seleccionada con Shift+Click
   private lastSelectedRowIndex: number | null = null;
 
   // Nueva propiedad para almacenar las filas seleccionadas antes de la clasificación
   private preSortSelection: Set<TableData> = new Set<TableData>();
 
-  
+
+  calcularSaldoTotal(): number {
+    let saldoTotal = 0;
+    // Recorrer todos los elementos de la fuente de datos y sumar sus saldos
+    this.dataSource.data.forEach((element: TableData) => {
+      saldoTotal += element.saldo;
+    });
+    return saldoTotal;
+  }
+
+  calcularDebeTotal(): number {
+    let debeTotal = 0;
+    // Recorrer todos los elementos de la fuente de datos y sumar sus saldos
+    this.dataSource.data.forEach((element: TableData) => {
+      debeTotal += element.debe;
+    });
+    return debeTotal;
+  }
+
+  calcularHaberTotal(): number {
+    let haberTotal = 0;
+    // Recorrer todos los elementos de la fuente de datos y sumar sus saldos
+    this.dataSource.data.forEach((element: TableData) => {
+      haberTotal += element.haber;
+    });
+    return haberTotal;
+  }
+
   rowClick(row: TableData, event: MouseEvent) {
     const isCtrlPressed = event.ctrlKey;
     const isShiftPressed = event.shiftKey;
 
-    
-    // Obtener los datos ordenados actualmente
-    //const sortedData = this.dataSource.sort?.sortData(this.dataSource.data, this.dataSource.sort);
-    
-    
-    /*
-    if (this.dataSource.sort?.active !== null && this.dataSource.sort?.direction !== '') {
-      // Si hay una clasificación aplicada, restaurar la selección a su estado antes de la clasificación
-      this.selection.clear();
-      this.preSortSelection.forEach(selectedRow => this.selection.select(selectedRow));
-    }
-    */
 
-    
+
     if (isCtrlPressed) {
       // Si Ctrl está presionado, simplemente alternar la selección de la fila
       this.selection.toggle(row);
     } else if (isShiftPressed && this.lastSelectedRowIndex !== null) {
       // Si Shift está presionado, seleccionar en rango
+
       const start = Math.min(this.lastSelectedRowIndex, this.dataSource.data.indexOf(row));
       const end = Math.max(this.lastSelectedRowIndex, this.dataSource.data.indexOf(row));
 
@@ -107,43 +103,13 @@ export class Test2CompoComponent implements AfterViewInit { // TableOverviewExam
     this.preSortSelection = new Set(this.selection.selected);
 
     // Restaurar el valor de lastSelectedRowIndex y preSortSelection al deseleccionar todas las filas
-  
+
   }
 
-  
 
-  /*
-  // Manejar el evento de clic en una fila
-  rowClick(row: TableData, event: MouseEvent) {
-    const isCtrlPressed = event.ctrlKey;
-    const isShiftPressed = event.shiftKey;
 
-    if (isCtrlPressed) {
-      // Si Ctrl está presionado, simplemente alternar la selección de la fila
-      this.selection.toggle(row);
-    } else if (isShiftPressed && this.lastSelectedRowIndex !== null) {
-      // Si Shift está presionado, seleccionar en rango
-      const start = Math.min(this.lastSelectedRowIndex, this.dataSource.data.indexOf(row));
-      const end = Math.max(this.lastSelectedRowIndex, this.dataSource.data.indexOf(row));
 
-      for (let i = start; i <= end; i++) {
-        this.selection.select(this.dataSource.data[i]);
-      }
-    } else {
-      // Si no hay teclas especiales, seleccionar solo la fila clicada
-      this.selection.clear();
-      this.selection.select(row);
-    }
-
-    // Actualizar el índice de la última fila seleccionada
-    this.lastSelectedRowIndex = this.dataSource.data.indexOf(row);
-  }
-
-  */
-
-  
-
-  selectRowsBetween() {// si funciona
+  selectRowsBetween() { // si funciona
     const selectedRows = this.selection.selected;
 
     if (selectedRows.length !== 2) {
@@ -152,6 +118,8 @@ export class Test2CompoComponent implements AfterViewInit { // TableOverviewExam
     }
 
     this.selection.clear();
+
+
 
     const startIndex = this.dataSource.data.indexOf(selectedRows[0]);
     //console.log(startIndex);
@@ -178,39 +146,6 @@ export class Test2CompoComponent implements AfterViewInit { // TableOverviewExam
     console.log('Selected Rows:', this.selection.selected);
   }
 
-
-  /*
-   selectRowsBetween() { // NO FUNCIOONA
-     const selected = this.selection.selected;
-     if (selected.length !== 2) {
-       // Handle cases where less than or more than two rows are selected
-       return;
-     }
- 
-     this.selection.clear();
-     
-     const startIndex = this.dataSource.data.indexOf(selected[0]);
-     const endIndex = this.dataSource.data.indexOf(selected[1]);
- 
-     if (startIndex === -1 || endIndex === -1) {
-       // Handle cases where selected rows are not found in the data source
-       return;
-     }
- 
-     // Clear any existing selection between the anchor points
-     this.selection.clear();
- 
-     // Select rows between the anchor points, preserving existing selection outside
-     const lowerIndex = Math.min(startIndex, endIndex);
-     const upperIndex = Math.max(startIndex, endIndex);
- 
-     for (let i = lowerIndex; i <= upperIndex; i++) {
-       this.selection.select(this.dataSource.data[i]);
-     }
-   }
-   */
-
-
   deselectAllRows() {
     this.selection.clear();
     this.lastSelectedRowIndex = null;
@@ -219,7 +154,7 @@ export class Test2CompoComponent implements AfterViewInit { // TableOverviewExam
 
 
   // Restaurar el valor de lastSelectedRowIndex y preSortSelection al deseleccionar todas las filas
-  
+
 
   selectAllUnselectedRows() {
     // Obtener todas las filas de la fuente de datos
@@ -288,6 +223,32 @@ export class Test2CompoComponent implements AfterViewInit { // TableOverviewExam
 
   getDisplayedColumns(): string[] {
     return this.columnDefinitions.filter(cd => !cd.hide).map(cd => cd.def);
+
+  }
+
+  test(){
+    //console.log(this.getDisplayedColumns());
+    //let row; columns: this.getDisplayedColumns();
+    //console.log(row);
+    /*
+    const pageSize = this.paginator.pageSize;
+    const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
+    const endIndex = Math.min(startIndex + pageSize, this.dataSource.filteredData.length);
+  
+    console.log(`Displayed Rows: ${endIndex - startIndex} out of ${this.dataSource.filteredData.length}`);
+    */
+
+    const pageSize = this.paginator.pageSize;
+    const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
+    const endIndex = Math.min(startIndex + pageSize, this.dataSource.filteredData.length);
+  
+    //console.log(`Displayed Rows: ${endIndex - startIndex} out of ${this.dataSource.filteredData.length}`);
+    
+    const displayedRows = this.dataSource.filteredData;
+    console.log('Displayed Rows:');
+    displayedRows.forEach((row, endIndex, displayedRows)=> {
+      console.log(row);
+    });
   }
 
 
@@ -334,6 +295,7 @@ export class Test2CompoComponent implements AfterViewInit { // TableOverviewExam
     this.selection2 = new SelectionModel<TableData>(allowMultiSelect, initialSelection);
     // Assign the data to the data source for the table to render
     this.dataSource = new MatTableDataSource(users);
+
   }
 
 
@@ -342,14 +304,13 @@ export class Test2CompoComponent implements AfterViewInit { // TableOverviewExam
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    
+
     this.sort.sortChange.subscribe(() => {
       // Limpiar la selección al cambiar la clasificación
       this.selection.clear();
     });
 
-    // see to undestand
-    // https://stackblitz.com/edit/angular-material-table-hide-columns-jgcnsg?file=src%2Fapp%2Fapp.component.html,src%2Fapp%2Fapp.component.ts
+
     let o1: Observable<boolean> = this.nroAsiento!.valueChanges;
     let o2: Observable<boolean> = this.nroAsiento!.valueChanges;
     let o3: Observable<boolean> = this.fecha!.valueChanges;
@@ -372,7 +333,6 @@ export class Test2CompoComponent implements AfterViewInit { // TableOverviewExam
       this.columnDefinitions[7].hide = this.haber!.value;
       this.columnDefinitions[8].hide = this.saldo!.value;
       this.columnDefinitions[9].hide = this.cc!.value;
-      //this.columnDefinitions[1].hide = this.description.value;  
       console.log(this.columnDefinitions);
     });
   }
@@ -398,20 +358,10 @@ function generateRandomDate(from: Date, to: Date) {
 // Builds and returns a new User. 
 function createNewUser(id: number): TableData {
 
-  /* +' ' +
-  NAMES[Math.round(Math.random() * (NAMES.length - 1))].charAt(0) +
-  '.';
-  */
-
   const deb: number = Math.trunc(Math.random() * 10000)
   const hab: number = Math.trunc(Math.random() * 10000)
 
   return {
-    /*id: id.toString(),    
-    progress: Math.round(Math.random() * 100).toString(),
-    fruit: FRUITS[Math.round(Math.random() * (FRUITS.length - 1))],
-    */
-
     nroAsiento: Math.floor(Math.random() * 90000) + 1000,
     fecha: generateRandomDate(new Date(2020, 1, 1), new Date(2022, 1, 1)).toISOString().substring(0, 10),
     fechaExtracto: generateRandomDate(new Date(2022, 1, 1), new Date(2024, 1, 1)).toISOString().substring(0, 10),
@@ -423,4 +373,4 @@ function createNewUser(id: number): TableData {
     cc: 0,
   };
 }
-
+ 
