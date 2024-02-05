@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Test2ModuModule } from './test2-modu/test2-modu.module';
+import { contaModule } from './contaMod/contaMod.module';
 
 
 @NgModule({
@@ -15,7 +15,7 @@ import { Test2ModuModule } from './test2-modu/test2-modu.module';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    Test2ModuModule
+    contaModule
   ],
   providers: [{ provide: LOCALE_ID, useValue: 'es-ES' }],
   bootstrap: [AppComponent]

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Test2CompoComponent } from './test2-compo/test2-compo.component';
+import { contaCompComponent } from './contaComp/contaComp.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -15,14 +15,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatInputModule } from '@angular/material/input';
-import { MatChipsModule } from '@angular/material/chips';
-
-
-
 
 @NgModule({
   declarations: [
-    Test2CompoComponent,
+    contaCompComponent,
   ],
   imports: [
     CommonModule,
@@ -40,20 +36,11 @@ import { MatChipsModule } from '@angular/material/chips';
     MatPaginatorModule,
     MatSortModule,
     MatInputModule,
-    MatChipsModule,
-
-
-
-
-
-
   ],
   exports: [
-    Test2CompoComponent,
-
-
+    contaCompComponent,
   ],
 
 })
-export class Test2ModuModule { }
+export class contaModule { }
 

@@ -1,4 +1,3 @@
-// try SheetJs 
 
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
@@ -8,8 +7,6 @@ import { FormGroup, FormControl, AbstractControl } from '@angular/forms';
 
 import { DataSource, SelectionModel } from '@angular/cdk/collections';
 import { Observable, merge } from 'rxjs';
-
-
 
 export interface TableData {
   nroAsiento: number;
@@ -23,20 +20,13 @@ export interface TableData {
   cc: number;
 }
 
-
-
-/**
- * @title Data table with sorting, pagination, and filtering.
- */
 @Component({
   selector: 'custom-table',
-  styleUrls: ['./test2-compo.component.css'],
-  templateUrl: './test2-compo.component.html',
+  styleUrls: ['./contaComp.component.css'],
+  templateUrl: './contaComp.component.html',
 })
 
-
-
-export class Test2CompoComponent implements AfterViewInit { // TableOverviewExample
+export class contaCompComponent implements AfterViewInit {
 
   selection = new SelectionModel<any>(true, []);
 
@@ -58,7 +48,6 @@ export class Test2CompoComponent implements AfterViewInit { // TableOverviewExam
 
   calcularDebeTotal(): number {
     let debeTotal = 0;
-    // Recorrer todos los elementos de la fuente de datos y sumar sus saldos
     this.dataSource.data.forEach((element: TableData) => {
       debeTotal += element.debe;
     });
@@ -67,7 +56,6 @@ export class Test2CompoComponent implements AfterViewInit { // TableOverviewExam
 
   calcularHaberTotal(): number {
     let haberTotal = 0;
-    // Recorrer todos los elementos de la fuente de datos y sumar sus saldos
     this.dataSource.data.forEach((element: TableData) => {
       haberTotal += element.haber;
     });
@@ -77,8 +65,6 @@ export class Test2CompoComponent implements AfterViewInit { // TableOverviewExam
   rowClick(row: TableData, event: MouseEvent) {
     const isCtrlPressed = event.ctrlKey;
     const isShiftPressed = event.shiftKey;
-
-
 
     if (isCtrlPressed) {
       // Si Ctrl está presionado, simplemente alternar la selección de la fila
@@ -93,7 +79,7 @@ export class Test2CompoComponent implements AfterViewInit { // TableOverviewExam
         this.selection.select(this.dataSource.data[i]);
       }
     } else {
-      // Si no hay teclas especiales, seleccionar solo la fila clicada
+      // Si no hay teclas especiales, seleccionar solo la fila
       this.selection.clear();
       this.selection.select(row);
     }
@@ -101,34 +87,22 @@ export class Test2CompoComponent implements AfterViewInit { // TableOverviewExam
     // Actualizar el índice de la última fila seleccionada y almacenar la selección antes de la clasificación
     this.lastSelectedRowIndex = this.dataSource.data.indexOf(row);
     this.preSortSelection = new Set(this.selection.selected);
-
-    // Restaurar el valor de lastSelectedRowIndex y preSortSelection al deseleccionar todas las filas
-
   }
 
-
-
-
-  selectRowsBetween() { // si funciona
+  selectRowsBetween() {
     const selectedRows = this.selection.selected;
 
     if (selectedRows.length !== 2) {
-      // Handle cases where less than or more than two rows are selected
       return;
     }
 
     this.selection.clear();
 
-
-
     const startIndex = this.dataSource.data.indexOf(selectedRows[0]);
-    //console.log(startIndex);
 
     const endIndex = this.dataSource.data.indexOf(selectedRows[1]);
-    //console.log(endIndex);
 
     if (startIndex === -1 || endIndex === -1) {
-      // Handle cases where selected rows are not found in the data source
       return;
     }
 
@@ -138,8 +112,6 @@ export class Test2CompoComponent implements AfterViewInit { // TableOverviewExam
     for (let i = lowerIndex; i <= upperIndex; i++) {
       this.selection.select(this.dataSource.data[i]);
     }
-
-    //this.logSelectedRows() // test if selection works
   }
 
   logSelectedRows() {
@@ -152,10 +124,7 @@ export class Test2CompoComponent implements AfterViewInit { // TableOverviewExam
     this.preSortSelection.clear();
   }
 
-
-  // Restaurar el valor de lastSelectedRowIndex y preSortSelection al deseleccionar todas las filas
-
-
+  // Seleccion inversa
   selectAllUnselectedRows() {
     // Obtener todas las filas de la fuente de datos
     const allRows = this.dataSource.data;
@@ -170,14 +139,7 @@ export class Test2CompoComponent implements AfterViewInit { // TableOverviewExam
     unselectedRows.forEach(row => this.selection.select(row));
   }
 
-
-
-
   form: FormGroup = new FormGroup({
-    /*
-    id: new FormControl(false),
-    description: new FormControl(false)
-    */
     select: new FormControl(false),
     nroAsiento: new FormControl(false),
     fecha: new FormControl(false),
@@ -201,9 +163,6 @@ export class Test2CompoComponent implements AfterViewInit { // TableOverviewExam
   saldo = this.form.get('saldo');
   cc = this.form.get('cc');
 
-
-
-
   columnDefinitions = [
     { def: 'select', label: 'select', hide: this.select!.value },
     { def: 'nroAsiento', label: 'NroAsiento', hide: this.nroAsiento!.value },
@@ -215,69 +174,28 @@ export class Test2CompoComponent implements AfterViewInit { // TableOverviewExam
     { def: 'haber', label: 'Haber', hide: this.haber!.value },
     { def: 'saldo', label: 'Saldo', hide: this.saldo!.value },
     { def: 'cc', label: 'Cc', hide: this.cc!.value },
-
   ]
-
-
-
 
   getDisplayedColumns(): string[] {
     return this.columnDefinitions.filter(cd => !cd.hide).map(cd => cd.def);
-
   }
-
-  test(){
-    //console.log(this.getDisplayedColumns());
-    //let row; columns: this.getDisplayedColumns();
-    //console.log(row);
-    /*
-    const pageSize = this.paginator.pageSize;
-    const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
-    const endIndex = Math.min(startIndex + pageSize, this.dataSource.filteredData.length);
-  
-    console.log(`Displayed Rows: ${endIndex - startIndex} out of ${this.dataSource.filteredData.length}`);
-    */
-
-    const pageSize = this.paginator.pageSize;
-    const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
-    const endIndex = Math.min(startIndex + pageSize, this.dataSource.filteredData.length);
-  
-    //console.log(`Displayed Rows: ${endIndex - startIndex} out of ${this.dataSource.filteredData.length}`);
-    
-    const displayedRows = this.dataSource.filteredData;
-    console.log('Displayed Rows:');
-    displayedRows.forEach((row, endIndex, displayedRows)=> {
-      console.log(row);
-    });
-  }
-
 
   // Whether the number of selected elements matches the total number of rows. 
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
-    //console.log("selected...");
-
-
     return numSelected == numRows;
-
   }
 
   // Selects all rows if they are not all selected; otherwise clear selection. 
   toggleAllRows() {
-
     this.isAllSelected() ?
       this.selection.clear() :
       this.dataSource.data.forEach(row => this.selection.select(row));
-
-
   }
-
 
   // not currently in use
   //displayedColumns: string[] = ['select', 'nroAsiento', 'fecha', 'fechaExtracto', 'concepto', 'nroDoc', 'debe', 'haber', 'saldo', 'cc']; //, 'fruit' 
-
-
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
@@ -286,19 +204,15 @@ export class Test2CompoComponent implements AfterViewInit { // TableOverviewExam
   selection2: SelectionModel<TableData>;
 
   constructor() {
-
-    // Create 100 users
-    const users = Array.from({ length: 100 }, (_, k) => createNewUser(k + 1));
+    // crear 100 Asientos
+    const users = Array.from({ length: 100 }, (_, k) => createNewAsiento(k + 1));
     const initialSelection: TableData[] | undefined = []; // 0
     const allowMultiSelect = true;
 
     this.selection2 = new SelectionModel<TableData>(allowMultiSelect, initialSelection);
     // Assign the data to the data source for the table to render
     this.dataSource = new MatTableDataSource(users);
-
   }
-
-
 
   dataSource: MatTableDataSource<TableData>;
   ngAfterViewInit() {
@@ -309,7 +223,6 @@ export class Test2CompoComponent implements AfterViewInit { // TableOverviewExam
       // Limpiar la selección al cambiar la clasificación
       this.selection.clear();
     });
-
 
     let o1: Observable<boolean> = this.nroAsiento!.valueChanges;
     let o2: Observable<boolean> = this.nroAsiento!.valueChanges;
@@ -345,7 +258,6 @@ export class Test2CompoComponent implements AfterViewInit { // TableOverviewExam
       this.dataSource.paginator.firstPage();
     }
   }
-
 }
 
 function generateRandomDate(from: Date, to: Date) {
@@ -355,22 +267,21 @@ function generateRandomDate(from: Date, to: Date) {
   );
 }
 
-// Builds and returns a new User. 
-function createNewUser(id: number): TableData {
+function createNewAsiento(id: number): TableData {
 
-  const deb: number = Math.trunc(Math.random() * 10000)
-  const hab: number = Math.trunc(Math.random() * 10000)
+  const deb: number = Math.floor(Math.random() * 10000)
+  const hab: number = Math.floor(Math.random() * 10000)
 
   return {
     nroAsiento: Math.floor(Math.random() * 90000) + 1000,
     fecha: generateRandomDate(new Date(2020, 1, 1), new Date(2022, 1, 1)).toISOString().substring(0, 10),
     fechaExtracto: generateRandomDate(new Date(2022, 1, 1), new Date(2024, 1, 1)).toISOString().substring(0, 10),
     concepto: 'Concepto ' + Math.floor(Math.random() * 100) + 10,
-    nroDoc: Math.trunc(Math.random() * 10000000),
-    debe: Math.trunc(Math.random() * 10000000),
-    haber: Math.trunc(Math.random() * 10000000),
+    nroDoc: Math.floor(Math.random() * 10000000),
+    debe: deb,
+    haber: hab,
     saldo: deb - hab,
     cc: 0,
   };
 }
- 
+
