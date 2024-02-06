@@ -214,12 +214,27 @@ export class contaCompComponent implements AfterViewInit {
     this.dataSource = new MatTableDataSource(users);
   }
 
-  dataSource: MatTableDataSource<TableData>;
+
+
+
+  dataSource!: MatTableDataSource<TableData>;
+  displayedColumns: string[] = ['nroAsiento', 'fecha', 'fechaExtracto', 'concepto', 'nroDoc', 'debe', 'haber', 'saldo', 'cc'];
+
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
     this.sort.sortChange.subscribe(() => {
+      // Reordenar la fuente de datos cuando cambia el orden
+      const data = this.dataSource.data.slice(); // Hacer una copia de los datos
+      if (this.sort.active && this.sort.direction) {
+        data.sort((a, b) => {
+          const isAsc = this.sort.direction === 'asc';
+          return compare(a[this.sort.active as keyof TableData], b[this.sort.active as keyof TableData], isAsc);
+        });
+      }
+      this.dataSource.data = data;
+      
       // Limpiar la selección al cambiar la clasificación
       this.selection.clear();
     });
@@ -234,6 +249,10 @@ export class contaCompComponent implements AfterViewInit {
     let o8: Observable<boolean> = this.haber!.valueChanges;
     let o9: Observable<boolean> = this.saldo!.valueChanges;
     let o10: Observable<boolean> = this.cc!.valueChanges;
+
+    function compare(a: number | string | Date, b: number | string | Date, isAsc: boolean) {
+      return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+    }
 
     merge(o1, o2, o3, o4, o5, o6, o7, o8, o9, o10).subscribe(v => {
       this.columnDefinitions[0].hide = this.select!.value;

@@ -15,6 +15,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatInputModule } from '@angular/material/input';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { MatInputModule } from '@angular/material/input';
     MatPaginatorModule,
     MatSortModule,
     MatInputModule,
+    FlexLayoutModule
   ],
   exports: [
     contaCompComponent,
