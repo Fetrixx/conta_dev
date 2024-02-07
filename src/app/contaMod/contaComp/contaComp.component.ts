@@ -21,7 +21,6 @@ export interface TableData {
   cc: number;
 }
 
-
 @Component({
   selector: 'custom-table',
   styleUrls: ['./contaComp.component.css'],
@@ -29,16 +28,11 @@ export interface TableData {
 })
 
 export class contaCompComponent implements AfterViewInit {
-  
-
   selection = new SelectionModel<any>(true, []);
-
   // Nueva propiedad para manejar la última fila seleccionada con Shift+Click
   private lastSelectedRowIndex: number | null = null;
-
   // Nueva propiedad para almacenar las filas seleccionadas antes de la clasificación
   private preSortSelection: Set<TableData> = new Set<TableData>();
-
 
   calcularSaldoTotal(): number {
     let saldoTotal = 0;
@@ -65,19 +59,41 @@ export class contaCompComponent implements AfterViewInit {
     return haberTotal;
   }
 
+  calcularDebeSeleccionado(): number {
+    let debeTotal = 0;
+    this.selection.selected.forEach((element: TableData) => {
+      debeTotal += element.debe;
+    });
+    return debeTotal;
+  }
+
+  calcularHaberSeleccionado(): number {
+    let haberTotal = 0;
+    this.selection.selected.forEach((element: TableData) => {
+      haberTotal += element.haber;
+    });
+    return haberTotal;
+  }
+
+  calcularSaldoSeleccionado(): number {
+    let saldoTotal = 0;
+    this.selection.selected.forEach((element: TableData) => {
+      saldoTotal += element.saldo;
+    });
+    return saldoTotal;
+  }
+
+
   rowClick(row: TableData, event: MouseEvent) {
     const isCtrlPressed = event.ctrlKey;
     const isShiftPressed = event.shiftKey;
-
     if (isCtrlPressed) {
       // Si Ctrl está presionado, simplemente alternar la selección de la fila
       this.selection.toggle(row);
     } else if (isShiftPressed && this.lastSelectedRowIndex !== null) {
       // Si Shift está presionado, seleccionar en rango
-
       const start = Math.min(this.lastSelectedRowIndex, this.dataSource.data.indexOf(row));
       const end = Math.max(this.lastSelectedRowIndex, this.dataSource.data.indexOf(row));
-
       for (let i = start; i <= end; i++) {
         this.selection.select(this.dataSource.data[i]);
       }
@@ -86,7 +102,6 @@ export class contaCompComponent implements AfterViewInit {
       this.selection.clear();
       this.selection.select(row);
     }
-
     // Actualizar el índice de la última fila seleccionada y almacenar la selección antes de la clasificación
     this.lastSelectedRowIndex = this.dataSource.data.indexOf(row);
     this.preSortSelection = new Set(this.selection.selected);
@@ -94,24 +109,17 @@ export class contaCompComponent implements AfterViewInit {
 
   selectRowsBetween() {
     const selectedRows = this.selection.selected;
-
     if (selectedRows.length !== 2) {
       return;
     }
-
     this.selection.clear();
-
     const startIndex = this.dataSource.data.indexOf(selectedRows[0]);
-
     const endIndex = this.dataSource.data.indexOf(selectedRows[1]);
-
     if (startIndex === -1 || endIndex === -1) {
       return;
     }
-
     const lowerIndex = Math.min(startIndex, endIndex);
     const upperIndex = Math.max(startIndex, endIndex);
-
     for (let i = lowerIndex; i <= upperIndex; i++) {
       this.selection.select(this.dataSource.data[i]);
     }
@@ -122,30 +130,57 @@ export class contaCompComponent implements AfterViewInit {
   }
 
   exportToExcel() {
-    const selectedRows = this.selection.selected;
-  
+    let rowsToExport: TableData[];
+    if (this.selection.selected.length > 0) {
+      // Si se han seleccionado elementos, exportar solo esos elementos
+      rowsToExport = this.selection.selected;
+    } else {
+      // Si no hay elementos seleccionados, exportar toda la tabla
+      rowsToExport = this.dataSource.data;
+    }
+    // Filtrar las columnas visibles para la exportación
+    const visibleColumns = this.columnDefinitions.filter(cd => !cd.hide && cd.def !== 'select');
+
+    // Obtener solo los nombres de las columnas visibles
+    const headers = visibleColumns.map(column => column.label);
     // Crear una matriz para almacenar los datos de las filas seleccionadas
     const data: any[][] = [];
-  
-    // Agregar encabezados de columna
-    const headers = this.displayedColumns.map(column => column.toUpperCase());
     data.push(headers);
-  
     // Agregar datos de las filas seleccionadas
-    selectedRows.forEach(row => {
-      const rowData = this.displayedColumns.map(column => row[column]);
+    rowsToExport.forEach(row => {
+      const rowData = visibleColumns.map(column => row[column.def as keyof TableData]);
       data.push(rowData);
     });
-  
     // Crear un libro de Excel
     const workbook = XLSX.utils.book_new();
     const worksheet = XLSX.utils.aoa_to_sheet(data);
-  
+    // Calcular el ancho máximo para cada columna
+    const columnWidths: number[] = [];
+    visibleColumns.forEach(column => {
+      const columnIndex = visibleColumns.indexOf(column);
+      const maxWidth = Math.max(...rowsToExport.map(row => String(row[column.def as keyof TableData]).length));
+      columnWidths[columnIndex] = maxWidth + 2; // Ajusta un poco más para dar espacio
+    });
+
+    // Agregar los datos al libro de trabajo con el ancho de las columnas configurado
+    XLSX.utils.sheet_add_aoa(worksheet, data, { origin: 'A1' });
+    worksheet['!cols'] = columnWidths.map(width => ({ wch: width })); // Establecer el ancho de las columnas
+
     // Agregar la hoja al libro
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Selected Rows');
-  
-    // Guardar el libro como archivo Excel
-    XLSX.writeFile(workbook, 'Asientos.xlsx');
+
+    // Guardar el libro como archivo Excel con un timestamp en el nombre
+    // Obtener el timestamp en el formato especificado
+    const now = new Date();
+    const day = now.getDate().toString().padStart(2, '0');
+    const month = (now.getMonth() + 1).toString().padStart(2, '0'); // Los meses comienzan desde 0
+    const year = now.getFullYear().toString();
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const seconds = now.getSeconds().toString().padStart(2, '0');
+    const filename = `Asientos ${day}-${month}-${year}  ${hours}.${minutes}.${seconds}.xlsx`;
+    XLSX.writeFile(workbook, filename);
+
   }
 
   deselectAllRows() {
@@ -158,13 +193,10 @@ export class contaCompComponent implements AfterViewInit {
   selectAllUnselectedRows() {
     // Obtener todas las filas de la fuente de datos
     const allRows = this.dataSource.data;
-
     // Filtrar las filas que aún no están seleccionadas
     const unselectedRows = allRows.filter(row => !this.selection.isSelected(row));
-
     // Deseleccionar todas las filas previamente seleccionadas
     this.selection.clear();
-
     // Seleccionar todas las filas que no estaban seleccionadas previamente
     unselectedRows.forEach(row => this.selection.select(row));
   }
@@ -225,7 +257,7 @@ export class contaCompComponent implements AfterViewInit {
   }
 
   // not currently in use
-  //displayedColumns: string[] = ['select', 'nroAsiento', 'fecha', 'fechaExtracto', 'concepto', 'nroDoc', 'debe', 'haber', 'saldo', 'cc']; //, 'fruit' 
+
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
@@ -238,7 +270,6 @@ export class contaCompComponent implements AfterViewInit {
     const users = Array.from({ length: 100 }, (_, k) => createNewAsiento(k + 1));
     const initialSelection: TableData[] | undefined = []; // 0
     const allowMultiSelect = true;
-
     this.selection2 = new SelectionModel<TableData>(allowMultiSelect, initialSelection);
     // Assign the data to the data source for the table to render
     this.dataSource = new MatTableDataSource(users);
@@ -248,12 +279,11 @@ export class contaCompComponent implements AfterViewInit {
 
 
   dataSource!: MatTableDataSource<TableData>;
-  displayedColumns: string[] = ['nroAsiento', 'fecha', 'fechaExtracto', 'concepto', 'nroDoc', 'debe', 'haber', 'saldo', 'cc'];
+  //displayedColumns: string[] = ['nroAsiento', 'fecha', 'fechaExtracto', 'concepto', 'nroDoc', 'debe', 'haber', 'saldo', 'cc'];
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-
     this.sort.sortChange.subscribe(() => {
       // Reordenar la fuente de datos cuando cambia el orden
       const data = this.dataSource.data.slice(); // Hacer una copia de los datos
@@ -264,7 +294,6 @@ export class contaCompComponent implements AfterViewInit {
         });
       }
       this.dataSource.data = data;
-      
       // Limpiar la selección al cambiar la clasificación
       this.selection.clear();
     });
@@ -302,7 +331,6 @@ export class contaCompComponent implements AfterViewInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
@@ -317,10 +345,8 @@ function generateRandomDate(from: Date, to: Date) {
 }
 
 function createNewAsiento(id: number): TableData {
-
   const deb: number = Math.floor(Math.random() * 10000)
   const hab: number = Math.floor(Math.random() * 10000)
-
   return {
     nroAsiento: Math.floor(Math.random() * 90000) + 1000,
     fecha: generateRandomDate(new Date(2020, 1, 1), new Date(2022, 1, 1)).toISOString().substring(0, 10),
@@ -333,4 +359,3 @@ function createNewAsiento(id: number): TableData {
     cc: 0,
   };
 }
-

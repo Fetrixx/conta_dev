@@ -1,3 +1,17 @@
+
+.button {
+  margin-bottom: 1%;
+  margin-right: 1%;
+}
+
+
+.selected-row {
+  background-color: #32adff3d;
+  /* Adjust as desired */
+}
+
+
+
 /*
   mat table
 .table-container {
@@ -12,31 +26,14 @@
   margin-bottom: 1%;
 }
 
-*/
-
-.button {
-  margin-bottom: 1%;
-  margin-right: 1%;
-}
-
-
-.selected-row {
-  background-color: #32adff3d;
-  /* Adjust as desired */
-}
-
-/*
 .card {
-  margin: 5%;
-  
-  
+  margin: 5%; 
   margin-top: 1vw;
   margin-bottom: 1vw;
   margin-left: 10%;
   margin-right: 10%;
 }
-*/
-/*
+
 .inputSmall {
   font-size: 12px;
   width: 40%;
@@ -49,21 +46,13 @@
   width: 100%;
 
 }
-*/
 
-
-
-
-
-
-/*
 .cardFooter {
   margin-top: 1vw;
   margin-bottom: 1vw;
   background: #a6d1ee63;
   text-align: end;
 }
-
 
 .textLeft {
   text-wrap: pretty;
