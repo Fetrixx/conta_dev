@@ -7,6 +7,7 @@ import { FormGroup, FormControl, AbstractControl } from '@angular/forms';
 
 import { DataSource, SelectionModel } from '@angular/cdk/collections';
 import { Observable, merge } from 'rxjs';
+import * as XLSX from 'xlsx';
 
 export interface TableData {
   nroAsiento: number;
@@ -20,6 +21,7 @@ export interface TableData {
   cc: number;
 }
 
+
 @Component({
   selector: 'custom-table',
   styleUrls: ['./contaComp.component.css'],
@@ -27,6 +29,7 @@ export interface TableData {
 })
 
 export class contaCompComponent implements AfterViewInit {
+  
 
   selection = new SelectionModel<any>(true, []);
 
@@ -116,6 +119,33 @@ export class contaCompComponent implements AfterViewInit {
 
   logSelectedRows() {
     console.log('Selected Rows:', this.selection.selected);
+  }
+
+  exportToExcel() {
+    const selectedRows = this.selection.selected;
+  
+    // Crear una matriz para almacenar los datos de las filas seleccionadas
+    const data: any[][] = [];
+  
+    // Agregar encabezados de columna
+    const headers = this.displayedColumns.map(column => column.toUpperCase());
+    data.push(headers);
+  
+    // Agregar datos de las filas seleccionadas
+    selectedRows.forEach(row => {
+      const rowData = this.displayedColumns.map(column => row[column]);
+      data.push(rowData);
+    });
+  
+    // Crear un libro de Excel
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.aoa_to_sheet(data);
+  
+    // Agregar la hoja al libro
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Selected Rows');
+  
+    // Guardar el libro como archivo Excel
+    XLSX.writeFile(workbook, 'Asientos.xlsx');
   }
 
   deselectAllRows() {

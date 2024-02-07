@@ -14,7 +14,7 @@
 
 */
 
-.but {
+.button {
   margin-bottom: 1%;
   margin-right: 1%;
 }
@@ -25,6 +25,18 @@
   /* Adjust as desired */
 }
 
+/*
+.card {
+  margin: 5%;
+  
+  
+  margin-top: 1vw;
+  margin-bottom: 1vw;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+*/
+/*
 .inputSmall {
   font-size: 12px;
   width: 40%;
@@ -37,17 +49,14 @@
   width: 100%;
 
 }
+*/
+
+
+
+
 
 
 /*
-
-.card {
-  margin-top: 1vw;
-  margin-bottom: 1vw;
-  margin-left: 10%;
-  margin-right: 10%;
-}
-
 .cardFooter {
   margin-top: 1vw;
   margin-bottom: 1vw;

@@ -1,58 +1,58 @@
 <!--
 https://tburleson-layouts-demos.firebaseapp.com/#/docs
-
-
 -->
 
-<div fxLayout="column">
-  <div fxFlex="80" style="margin: 1% 10%;">
-    <mat-card class="card">
+<div fxLayout="column"> <!--Principal-->
+  <div>
+    <mat-card style="margin-top: 1% !important; margin-bottom: 1% !important; margin:4%">
       <mat-card-content>
-        <mat-form-field class="inputSmall">
-          <mat-label>Cuenta Numero *</mat-label>
-          <input matInput placeholder="" #inputNroCuenta type="number">
-        </mat-form-field>
 
+        <div fxLayout="row" fxLayoutGap="10px">
+          <!-- Encabezado -->
+          <mat-form-field fxFlex="50">
+            <mat-label>Cuenta Numero *</mat-label>
+            <input matInput #inputNroCuenta type="number">
+          </mat-form-field>
 
-        
-
-        <mat-form-field class="inputSmall">
-          <mat-label>Rango de Fechas</mat-label>
-          <mat-date-range-input [rangePicker]="inputRangoFechas">
-            <input id="matStartDate" matStartDate placeholder="Fecha inicial">
-            <input id="matEndDate" matEndDate placeholder="Fecha final">
-          </mat-date-range-input>
-          <mat-hint>Dia/Mes/Año – Dia/Mes/Año </mat-hint>
-          <mat-datepicker-toggle matIconSuffix [for]="inputRangoFechas"></mat-datepicker-toggle>
-          <mat-date-range-picker #inputRangoFechas></mat-date-range-picker>
-        </mat-form-field>
-
-        <button mat-raised-button color="warn">Cargar Tabla</button>
-
+          <mat-form-field fxFlex="50">
+            <mat-label>Rango de Fechas *</mat-label>
+            <mat-date-range-input [rangePicker]="inputRangoFechas">
+              <input id="matStartDate" matStartDate placeholder="Fecha inicial">
+              <input id="matEndDate" matEndDate placeholder="Fecha final">
+            </mat-date-range-input>
+            <mat-hint>Dia/Mes/Año – Dia/Mes/Año </mat-hint>
+            <mat-datepicker-toggle matSuffix [for]="inputRangoFechas"></mat-datepicker-toggle>
+            <mat-date-range-picker #inputRangoFechas></mat-date-range-picker>
+          </mat-form-field>
+          <button fxFlex="15" mat-raised-button color="warn">Cargar Tabla</button>
+        </div>
       </mat-card-content>
     </mat-card>
   </div>
 
-  <div >
-    
-    <mat-card class="card">
-      <mat-card-content>
 
-        <div>
-          <mat-form-field class="inputLarge">
+  <div fxLayout="column" style="margin-top: 1% !important; margin-bottom: 1% !important; margin:4%">  <!--Tabla-->
+
+    <mat-card> <!-- style="margin-top: 1% !important; margin-bottom: 1% !important; margin:4%"-->
+      <mat-card-content fxLayout="column">
+
+        <div fxLayout="column" fxLayoutGap="10px">
+          <mat-form-field fxFlex>
             <mat-label>Buscar</mat-label>
             <input matInput (keyup)="applyFilter($event)" placeholder="" #inputSearch>
-
           </mat-form-field>
         </div>
-        <div>
-          <button mat-raised-button class="but" color="primary" [matMenuTriggerFor]="menu"> Columna a Ocultar</button>
-          <button mat-raised-button class="but" color="primary" (click)="deselectAllRows()">Deseleccionar</button>
-          <button mat-raised-button class="but" color="primary" (click)="selectRowsBetween()">Seleccionar Filas
+        <div fxLayout="row" fxLayoutGap="10px">
+          <button mat-raised-button fxFlex style="height: 7vh;" class="button" color="primary" [matMenuTriggerFor]="menu"> Columna a
+            Ocultar</button>
+          <button mat-raised-button fxFlex style="height: 7vh;" class="button" color="primary" (click)="deselectAllRows()">Deseleccionar</button>
+          <button mat-raised-button fxFlex style="height: 7vh;" class="button" color="primary" (click)="selectRowsBetween()">Seleccionar Filas
             Entre...</button>
-          <button mat-raised-button class="but" color="primary" (click)="selectAllUnselectedRows()">Seleccion
+          <button mat-raised-button fxFlex style="height: 7vh;" class="button" color="primary" (click)="selectAllUnselectedRows()">Seleccion
             Inversa</button>
-          <button mat-raised-button class="but" color="warn" (click)="logSelectedRows()">LogSelection</button>
+          <!--button mat-raised-button fxFlex style="height: 7vh;" class="button" color="warn" (click)="logSelectedRows()">LogSelection</button-->
+          <button mat-raised-button fxFlex style="height: 7vh;" class="button" color="warn" (click)="exportToExcel()">Exportar Seleccion</button>
+
 
           <mat-menu #menu="matMenu">
             <form [formGroup]="form">
@@ -61,7 +61,7 @@ https://tburleson-layouts-demos.firebaseapp.com/#/docs
           </mat-menu>
         </div>
 
-        <div class="table-container">
+        <div style="overflow-x: auto;">
           <table style="user-select: none;" mat-table [dataSource]="dataSource" matSort #table1>
 
             <ng-container matColumnDef="select">
@@ -136,7 +136,7 @@ https://tburleson-layouts-demos.firebaseapp.com/#/docs
               <td class="textLeft" colspan="4"> No hay datos que coincidan el valor "{{inputSearch.value}}"</td>
             </tr>
           </table>
-          <mat-card style="margin:2%">
+          <mat-card style="margin:2%; background: #a6d1ee63" >
             <mat-card-content>
               <mat-label style="font-weight: bold;">
                 Debe Total: {{calcularDebeTotal().toLocaleString()}},
@@ -151,4 +151,6 @@ https://tburleson-layouts-demos.firebaseapp.com/#/docs
       </mat-card-content>
     </mat-card>
   </div>
+
 </div>
+
